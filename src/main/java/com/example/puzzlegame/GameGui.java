@@ -10,18 +10,19 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Stack;
 
 public class GameGui extends Application {
     int index = 0;
     ArrayList<String> states;
+
+    public static void main(String[] args) {
+        launch();
+    }
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -62,8 +63,7 @@ public class GameGui extends Application {
         Platform.runLater(() -> {
             SkinBase<ChoiceBox<String>> skin = (SkinBase<ChoiceBox<String>>) chooseAlgorithm.getSkin();
             for (Node child : skin.getChildren()) {
-                if (child instanceof Label) {
-                    Label label = (Label) child;
+                if (child instanceof Label label) {
                     if (label.getText().isEmpty()) {
                         label.setText("Choose Algorithm");
                     }
@@ -78,8 +78,7 @@ public class GameGui extends Application {
         Platform.runLater(() -> {
             SkinBase<ChoiceBox<String>> skin = (SkinBase<ChoiceBox<String>>) chooseHeuristic.getSkin();
             for (Node child : skin.getChildren()) {
-                if (child instanceof Label) {
-                    Label label = (Label) child;
+                if (child instanceof Label label) {
                     if (label.getText().isEmpty()) {
                         label.setText("Choose Heuristic");
                     }
@@ -123,27 +122,25 @@ public class GameGui extends Application {
             prev.setDisable(true);
 
 
-
             String intState = inStateval.getText();
             String goalState = goal.getText();
             Alert error;
-            if (!validate_input(intState)||!validate_input(goalState))
-            {
-                error = new Alert(Alert.AlertType.ERROR,"Enter Valid Input");
+            if (!validate_input(intState) || !validate_input(goalState)) {
+                error = new Alert(Alert.AlertType.ERROR, "Enter Valid Input");
                 error.show();
                 return;
             }
 
 
             String method = chooseAlgorithm.getValue().toString();
-            if(method==""){
-                error = new Alert(Alert.AlertType.ERROR,"you should choose method");
+            if (method == "") {
+                error = new Alert(Alert.AlertType.ERROR, "you should choose method");
                 error.show();
                 return;
             }
             String heuristic = chooseHeuristic.getValue().toString();
-            if(!check_solvable(intState)){
-                error = new Alert(Alert.AlertType.ERROR,"Sorry:This not a Solvable State !! ");
+            if (!check_solvable(intState)) {
+                error = new Alert(Alert.AlertType.ERROR, "Sorry:This not a Solvable State !! ");
                 error.show();
                 return;
             }
@@ -153,7 +150,7 @@ public class GameGui extends Application {
             nodesExpandVal.setText(String.valueOf(resultState.getNodes_expanded().size()));
             pathCostVal.setText(String.valueOf(resultState.getCost_of_path()));
             searchDepthVal.setText(String.valueOf(resultState.getSearch_depth()));
-            runningTimeVal.setText(String.format("%.3f",(resultState.getRunning_time())/1_000_000_000)+" Secs");
+            runningTimeVal.setText(String.format("%.3f", (resultState.getRunning_time()) / 1_000_000_000) + " Secs");
 
             resultState.getPath_to_goal().forEach(System.out::println);
 
@@ -172,24 +169,17 @@ public class GameGui extends Application {
             prev.setDisable(false);
             if (index == states.size() - 1)
                 next.setDisable(true);
-
-
         });
-
         prev.setOnAction(event -> {
             --index;
             System.out.println(index);
-
             Draw(Table8, states.get(index));
             next.setDisable(false);
             if (index == 0)
                 prev.setDisable(true);
         });
-
         reset.setOnAction(event -> {
-
             index = 0;
-
             nodesExpandVal.setText("0");
             pathCostVal.setText("0");
             searchDepthVal.setText("0");
@@ -197,11 +187,7 @@ public class GameGui extends Application {
             prev.setDisable(true);
             next.setDisable(true);
             run.setDisable(false);
-
-
         });
-
-
         chooseAlgorithm.setOnAction(actionEvent -> {
             if (chooseAlgorithm.getSelectionModel().getSelectedItem().equals("A*")) {
                 chooseHeuristic.setDisable(false);
@@ -217,13 +203,11 @@ public class GameGui extends Application {
         gridPane.add(GoalState, 1, 4);
         gridPane.add(goal, 1, 5);
         gridPane.setVgap(8);
-
         gridPane.add(chooseAlgorithm, 0, 6);
         gridPane.setHgap(5);
         gridPane.add(chooseHeuristic, 1, 6);
         gridPane.add(run, 1, 14);
         gridPane.setVgap(8);
-
         gridPane.add(nodesExpand, 0, 7);
         gridPane.add(nodesExpandVal, 1, 7);
         gridPane.add(searchDepth, 0, 8);
@@ -232,13 +216,10 @@ public class GameGui extends Application {
         gridPane.add(pathCostVal, 1, 9);
         gridPane.add(runningTime, 0, 10);
         gridPane.add(runningTimeVal, 1, 10);
-
         Table8.add(next, 0, 3);
         Table8.add(prev, 2, 3);
         gridPane.add(reset, 0, 14);
-
         Table8.add(path, 1, 3);
-
         Table8.setMinSize(500, 400);
         pane.getChildren().addAll(Table8, gridPane);
         stage.setScene(new Scene(pane));
@@ -246,7 +227,7 @@ public class GameGui extends Application {
     }
 
     private ResultState solver(String method, String heurstic, String intstate, String goal) {
-        ResultState resultState =  new ResultState();
+        ResultState resultState = new ResultState();
         switch (method) {
             case "A*":
                 Asearch AS = new Asearch();
@@ -268,7 +249,6 @@ public class GameGui extends Application {
                 resultState.setCost_of_path(resultState.getSearch_depth());
                 break;
             case "BFS":
-
                 BFS bfs = new BFS();
                 start = System.nanoTime();
                 bfs.BreadthFirstSearch(new StateNode(intstate, -1, 0), goal);
@@ -279,22 +259,17 @@ public class GameGui extends Application {
                 resultState.setCost_of_path(resultState.getSearch_depth());
                 break;
         }
-
         return resultState;
     }
 
     private void Draw(GridPane gridPane, String state) {
-
         int letter = 0;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Label label = new Label(String.valueOf(state.toCharArray()[letter]).replace("0", " "));
-                if(index==states.size()-1)
-                {
+                if (index == states.size() - 1) {
                     label.setStyle("-fx-font-weight : bold; -fx-font-family:\"Arial Narrow\";-fx-font-size:40;-fx-text-fill: red;-fx-border-fill: red");
-
-                }else
-                {
+                } else {
                     label.setStyle("-fx-font-weight : bold; -fx-font-family:\"Arial Narrow\";-fx-font-size:40; ");
                 }
                 Rectangle rectangle = new Rectangle();
@@ -311,45 +286,30 @@ public class GameGui extends Application {
             }
         }
     }
-   public boolean check_solvable(String state){
-       int numOfInversions=0;
-       for(int i=0;i<state.length();i++)
-       {
-           for(int j=i+1;j<state.length();j++)
-           {
-               if((state.charAt(i)-'0'>0) && (state.charAt(j)-'0')>0 && state.charAt(i)>state.charAt(j))
-               {
-                   numOfInversions++;
-               }
-           }
-       }
-       if(numOfInversions%2 ==0)
-       {
-           return true;
-       }
-       else{
-           return false;
-       }
+
+    public boolean check_solvable(String state) {
+        int numOfInversions = 0;
+        for (int i = 0; i < state.length(); i++) {
+            for (int j = i + 1; j < state.length(); j++) {
+                if ((state.charAt(i) - '0' > 0) && (state.charAt(j) - '0') > 0 && state.charAt(i) > state.charAt(j)) {
+                    numOfInversions++;
+                }
+            }
+        }
+        return numOfInversions % 2 == 0;
     }
-   public boolean validate_input(String state){
-        if (state.length()!=9){
+
+    public boolean validate_input(String state) {
+        if (state.length() != 9) {
             return false;
         }
 
-       for (int i = 0; i < state.length(); i++) {
-           int c=Integer.parseInt(String.valueOf(state.toCharArray()[i]));
-           if(!(c>=0 &&c<=8))
-           {
-               return false;
-           }
-       }
-
-
-       return true;
-   }
-    public static void main(String[] args) {
-        launch();
+        for (int i = 0; i < state.length(); i++) {
+            int c = Integer.parseInt(String.valueOf(state.toCharArray()[i]));
+            if (!(c >= 0 && c <= 8)) {
+                return false;
+            }
+        }
+        return true;
     }
-
-
 }

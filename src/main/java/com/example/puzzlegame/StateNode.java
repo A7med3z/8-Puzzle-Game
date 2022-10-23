@@ -1,4 +1,5 @@
 package com.example.puzzlegame;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +14,8 @@ public class StateNode {
     private StateNode down;
     private StateNode parent;
     private int cost;
-    private List<StateNode> neighbors;
-    private String HType="";
+    private final List<StateNode> neighbors;
+    private String HType = "";
 
     public StateNode(String state, int position, int height) {
         this.state = state;
@@ -27,25 +28,25 @@ public class StateNode {
         this.neighbors = new ArrayList<StateNode>();
     }
 
-    public StateNode(String state, int position, int height,String AstarH ) {
+    public StateNode(String state, int position, int height, String AstarH) {
         Hdistance obj = new Hdistance();
         this.state = state;
         this.position = position;
         this.height = height;
-        if (AstarH.equals("manhattan"))
-        {
+        if (AstarH.equals("manhattan")) {
             this.cost = this.height + obj.ManhattanDist(this.state);
-        }else {
+        } else {
             this.cost = this.height + obj.EuclideanDist(this.state);
 
         }
-        this.HType=AstarH;
+        this.HType = AstarH;
         this.right = null;
         this.left = null;
         this.up = null;
         this.down = null;
         this.neighbors = new ArrayList<StateNode>();
     }
+
     public String getState() {
         return state;
     }
@@ -99,15 +100,10 @@ public class StateNode {
 
     private void updateNextLevel() {
         boolean[] availablePositions = {true, true, true, true};
-        if (state.indexOf('0') % 3 == 2)
-            availablePositions[0] = false;
-        if (state.indexOf('0') % 3 == 0)
-            availablePositions[1] = false;
-        if (state.indexOf('0') < 3)
-            availablePositions[2] = false;
-        if (state.indexOf('0') > 5)
-            availablePositions[3] = false;
-
+        if (state.indexOf('0') % 3 == 2) availablePositions[0] = false;
+        if (state.indexOf('0') % 3 == 0) availablePositions[1] = false;
+        if (state.indexOf('0') < 3) availablePositions[2] = false;
+        if (state.indexOf('0') > 5) availablePositions[3] = false;
         switch (position) {
             case 0:
                 availablePositions[1] = false;
@@ -127,50 +123,43 @@ public class StateNode {
         int pos = state.indexOf('0');
         if (availablePositions[0]) {
             String newState = swap(state, pos, pos + 1);
-            if(HType.isEmpty())
-            {
+            if (HType.isEmpty()) {
                 this.right = new StateNode(newState, 0, height + 1);
-            }else{
-                this.right = new StateNode(newState, 0, height + 1,this.HType);
+            } else {
+                this.right = new StateNode(newState, 0, height + 1, this.HType);
             }
-
             this.right.parent = this;
             neighbors.add(this.right);
         }
         if (availablePositions[1]) {
             String newState = swap(state, pos, pos - 1);
-            if(HType.isEmpty())
-            {
+            if (HType.isEmpty()) {
                 this.left = new StateNode(newState, 1, height + 1);
-            }else{
-                this.left = new StateNode(newState, 1, height + 1,this.HType);
+            } else {
+                this.left = new StateNode(newState, 1, height + 1, this.HType);
             }
             this.left.parent = this;
             neighbors.add(this.left);
         }
         if (availablePositions[2]) {
             String newState = swap(state, pos, pos - 3);
-            if(HType.isEmpty())
-            {
+            if (HType.isEmpty()) {
                 this.up = new StateNode(newState, 2, height + 1);
-            }else{
-                this.up = new StateNode(newState, 2, height + 1,this.HType);
+            } else {
+                this.up = new StateNode(newState, 2, height + 1, this.HType);
             }
             this.up.parent = this;
             neighbors.add(this.up);
         }
         if (availablePositions[3]) {
             String newState = swap(state, pos, pos + 3);
-            if(HType.isEmpty())
-            {
+            if (HType.isEmpty()) {
                 this.down = new StateNode(newState, 3, height + 1);
-            }else{
-                this.down = new StateNode(newState, 3, height + 1,this.HType);
+            } else {
+                this.down = new StateNode(newState, 3, height + 1, this.HType);
             }
-
             this.down.parent = this;
             neighbors.add(this.down);
         }
-
     }
 }

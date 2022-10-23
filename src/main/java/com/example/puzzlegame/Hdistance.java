@@ -37,9 +37,7 @@ public class Hdistance {
         map.put(6, new ArrayList<>(Arrays.asList(2, 0)));
         map.put(7, new ArrayList<>(Arrays.asList(2, 1)));
         map.put(8, new ArrayList<>(Arrays.asList(2, 2)));
-
         int distance = 0;
-
         for (int i = 0; i < state.length(); i++) {
             if (state.charAt(i) != '0') {
                 distance += Math.round(Math.abs(map.get(state.charAt(i) - '0').get(0) - map.get(i).get(0)) + Math.abs(map.get(state.charAt(i) - '0').get(1) - map.get(i).get(1)));
