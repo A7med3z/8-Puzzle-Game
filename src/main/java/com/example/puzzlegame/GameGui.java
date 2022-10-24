@@ -13,7 +13,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class GameGui extends Application {
@@ -25,14 +24,14 @@ public class GameGui extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         stage.setTitle("8 Puzzle");
         Pane pane = new Pane();
         GridPane gridPane = new GridPane();
         GridPane Table8 = new GridPane();
         Table8.setPadding(new Insets(20, 20, 20, 20));
         gridPane.setPadding(new Insets(20, 10, 20, 400));
-        Label IntialState = new Label("IntialState");
+        Label InitialState = new Label("Initial State");
         TextField inStateval = new TextField();
         inStateval.setPromptText("Enter like: 012345678");
         Label GoalState = new Label("GoalState");
@@ -150,19 +149,14 @@ public class GameGui extends Application {
             nodesExpandVal.setText(String.valueOf(resultState.getNodes_expanded().size()));
             pathCostVal.setText(String.valueOf(resultState.getCost_of_path()));
             searchDepthVal.setText(String.valueOf(resultState.getSearch_depth()));
-            runningTimeVal.setText(String.format("%.3f", (resultState.getRunning_time()) / 1_000_000_000) + " Secs");
-
+            runningTimeVal.setText(String.format("%.5f", (resultState.getRunning_time()) / 1_000_000_000) + " Secs");
             resultState.getPath_to_goal().forEach(System.out::println);
-
             Draw(Table8, states.get(index));
-
             next.setDisable(false);
             reset.setDisable(false);
             run.setDisable(true);
-
         });
         next.setOnAction(event -> {
-
             ++index;
             System.out.println(index);
             Draw(Table8, states.get(index));
@@ -197,7 +191,7 @@ public class GameGui extends Application {
                 chooseHeuristic.setValue("");
             }
         });
-        gridPane.add(IntialState, 0, 4);
+        gridPane.add(InitialState, 0, 4);
         gridPane.add(inStateval, 0, 5);
         gridPane.setHgap(5);
         gridPane.add(GoalState, 1, 4);
@@ -303,7 +297,6 @@ public class GameGui extends Application {
         if (state.length() != 9) {
             return false;
         }
-
         for (int i = 0; i < state.length(); i++) {
             int c = Integer.parseInt(String.valueOf(state.toCharArray()[i]));
             if (!(c >= 0 && c <= 8)) {

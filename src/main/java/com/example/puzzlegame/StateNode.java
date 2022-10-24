@@ -8,13 +8,13 @@ public class StateNode {
     private final String state;
     private final int position;
     private final int height;
+    private final List<StateNode> neighbors;
     private StateNode right;
     private StateNode left;
     private StateNode up;
     private StateNode down;
     private StateNode parent;
     private int cost;
-    private final List<StateNode> neighbors;
     private String HType = "";
 
     public StateNode(String state, int position, int height) {
@@ -37,7 +37,6 @@ public class StateNode {
             this.cost = this.height + obj.ManhattanDist(this.state);
         } else {
             this.cost = this.height + obj.EuclideanDist(this.state);
-
         }
         this.HType = AstarH;
         this.right = null;
@@ -85,6 +84,10 @@ public class StateNode {
 
     public StateNode getParent() {
         return parent;
+    }
+
+    public void setParent(StateNode parent) {
+        this.parent = parent;
     }
 
     public List<StateNode> getNeighbors() {

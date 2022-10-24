@@ -36,6 +36,7 @@ public class Asearch {
             Explored.add(state.getState());
             if (state.getState().equals(goal)) {
                 this.Goal = state;
+                //  System.out.println(this.Goal.getState()+"  ggg"); ////s
                 return true;
             }
             List<StateNode> neighbors = state.getNeighbors();
@@ -49,6 +50,7 @@ public class Asearch {
                         StateNode st = value.next();
                         if (st.getState().equals(neighbor.getState()) && (st.getCost() > neighbor.getCost())) {
                             st.setCost(neighbor.getCost());
+                            st.setParent(neighbor.getParent());
                         }
                     }
                 }

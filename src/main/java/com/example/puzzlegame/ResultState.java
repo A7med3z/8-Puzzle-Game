@@ -49,14 +49,13 @@ public class ResultState {
         Stack<String> stack = new Stack<>();
         while (state != null) {
             stack.push(state.getState());
-            cost_of_path += state.getCost();
             state = state.getParent();
         }
         while (!stack.empty()) {
             String st = stack.pop();
             path_to_goal.add(st);
         }
-        search_depth = path_to_goal.size();
+        cost_of_path = path_to_goal.size() - 1;
+        search_depth = path_to_goal.size() - 1;
     }
-
 }
